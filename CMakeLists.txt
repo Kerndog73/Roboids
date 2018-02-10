@@ -3,15 +3,21 @@ project(Roboids)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_COMPILER /usr/local/Cellar/emscripten/1.37.33/libexec/emcc)
+
+if (CMAKE_BUILD_TYPE MATCHES RELEASE)
+  set(OPTIMIZING_FLAGS -O3)
+else()
+  set(OPTIMIZING_FLAGS "")
+endif()
+
 set(LINKER_FLAGS " \
+  ${OPTIMIZING_FLAGS} \
   -s USE_WEBGL2=1 \
   -s USE_SDL=2 \
-  --closure 1 \
   --pre-js ${PROJECT_SOURCE_DIR}/Webpage/init.js \
   --shell-file ${PROJECT_SOURCE_DIR}/Webpage/index.html \
 ")
 include_directories(/usr/local/include/)
-add_definitions(-DINCLUDE_OPENGL_ES2_HEADERS)
 
 # Sources
 

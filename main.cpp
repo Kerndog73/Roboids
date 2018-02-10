@@ -10,6 +10,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE void mainloop() {
   while (SDL_PollEvent(&e)) {
     std::cout << "Got event\n";
     if (e.type == SDL_MOUSEBUTTONDOWN) {
+      std::cout << "Received mouse event. Canceling main loop\n";
       emscripten_cancel_main_loop();
     }
   }
