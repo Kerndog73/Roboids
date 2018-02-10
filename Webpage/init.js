@@ -1,9 +1,7 @@
-var Module = {
-  "print": function() {
-    console.log(Array.prototype.slice.call(arguments).join(" "));
-  },
-  "printErr": function() {
-    console.error(Array.prototype.slice.call(arguments).join(" "));
-  },
-  "canvas": document.querySelector("canvas")
+Module["print"] = function() {
+  console.log(Array.prototype.slice.call(arguments).join(" "));
 };
+Module["printErr"] = function() {
+  console.warn(Array.prototype.slice.call(arguments).join(" "));
+};
+Module["canvas"] = document.querySelector("canvas");

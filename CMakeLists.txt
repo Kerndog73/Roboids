@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_COMPILER /usr/local/Cellar/emscripten/1.37.33/libexec/emcc)
 
 if (CMAKE_BUILD_TYPE MATCHES RELEASE)
-  set(OPTIMIZING_FLAGS -O3)
+  set(OPTIMIZING_FLAGS "-O3 --closure 1")
 else()
   set(OPTIMIZING_FLAGS "")
 endif()
