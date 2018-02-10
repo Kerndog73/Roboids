@@ -1,6 +1,9 @@
 #include <iostream>
 #include <SDL/SDL.h>
+#include <GLES3/gl3.h>
 #include <emscripten.h>
+
+SDL_Renderer *renderer = nullptr;
 
 extern "C" EMSCRIPTEN_KEEPALIVE void mainloop() {
   SDL_Event e;
@@ -10,22 +13,32 @@ extern "C" EMSCRIPTEN_KEEPALIVE void mainloop() {
       emscripten_cancel_main_loop();
     }
   }
+  
+  SDL_RenderPresent(renderer);
 }
 
 extern "C" int main() {
-  static_assert(*__PRETTY_FUNCTION__ == 'i');
-  
   if (SDL_Init(SDL_INIT_VIDEO) == -1) {
-    std::cout << "SDL Error: " << SDL_GetError() << '\n';
+    std::cout << "SDL init error: " << SDL_GetError() << '\n';
   }
   
-  std::cout << "Starting mainloop\n";
+  emscripten_set_main_loop(&mainloop, 0, 0);
   
-  emscripten_set_main_loop(&mainloop, 0, true);
+  SDL_Window *window = SDL_CreateWindow("Window", 0, 0, 400, 400, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+  if (window == nullptr) {
+    std::cout << "SDL window create error: " << SDL_GetError() << '\n';
+  }
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  if (renderer == nullptr) {
+    std::cout << "SDL renderer create error: " << SDL_GetError() << '\n';
+  }
   
-  std::cout << "Finishing main loop\n";
+  GLuint buf;
+  glGenBuffers(1, &buf);
+  glBindBuffer(GL_ARRAY_BUFFER, buf);
   
-  SDL_Quit();
+  emscripten_cancel_main_loop();
+  emscripten_set_main_loop(&mainloop, 0, 1);
   
   return 0;
 }
